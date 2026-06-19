@@ -9,13 +9,20 @@ import FAQ from './components/FAQ'
 import ContactForm from './components/ContactForm'
 import Footer from './components/Footer'
 import UseCases from './components/UseCases'
+import CompanyRegistration from './components/CompanyRegistration'
 import { Component as InfiniteGrid } from './components/ui/the-infinite-grid'
 
-const isDemo = window.location.pathname === '/demo'
+const path = window.location.pathname
+const isDemo = path === '/demo'
+const isCompanyRegister = path === '/cadastro-empresa' || path === '/registro-empresa'
 
 function App() {
   if (isDemo) {
     return <InfiniteGrid />
+  }
+
+  if (isCompanyRegister) {
+    return <CompanyRegistration />
   }
 
   return (

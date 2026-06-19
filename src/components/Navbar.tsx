@@ -5,10 +5,11 @@ import Logo from './Logo'
 
 const navLinks = [
   { label: 'Funcionalidades', href: '#features' },
-  { label: 'Soluções', href: '#products' },
+  { label: 'Solucoes', href: '#products' },
   { label: 'Como Funciona', href: '#how-it-works' },
-  { label: 'Preços', href: '#pricing' },
+  { label: 'Precos', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
+  { label: 'Cadastrar empresa', href: '/cadastro-empresa' },
 ]
 
 export default function Navbar() {
@@ -32,12 +33,10 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <a href="#">
+          <a href="/">
             <Logo size={36} onDark={!scrolled} />
           </a>
 
-          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
@@ -50,32 +49,30 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="#contact"
+              href="/app/#/login"
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
             >
               Entrar
             </a>
             <a
-              href="#contact"
+              href="/cadastro-empresa"
               className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-blue-500/30 transition-all duration-200 hover:-translate-y-0.5"
             >
-              Solicitar Demo
+              Cadastrar empresa
             </a>
           </div>
 
-          {/* Mobile Toggle */}
           <button
             onClick={() => setOpen(!open)}
             className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            aria-label="Abrir menu"
           >
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {open && (
           <div className="lg:hidden bg-white border-t border-gray-100 py-4 px-2 space-y-1">
             {navLinks.map((link) => (
@@ -90,10 +87,10 @@ export default function Navbar() {
             ))}
             <div className="pt-3 border-t border-gray-100 space-y-2">
               <a
-                href="#contact"
+                href="/cadastro-empresa"
                 className="block w-full text-center px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl"
               >
-                Solicitar Demo Gratuita
+                Cadastrar empresa
               </a>
             </div>
           </div>

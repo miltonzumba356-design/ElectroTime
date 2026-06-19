@@ -54,10 +54,10 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-14">
           <a
-            href="#contact"
+            href="/cadastro-empresa"
             className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:-translate-y-0.5 text-sm"
           >
-            Solicitar demonstração
+            Solicitar registo
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
           <a
