@@ -1,67 +1,39 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-  Clock, Shield, BarChart3, Smartphone, Calendar,
-  Bell, FileText, Globe, Zap,
-} from 'lucide-react'
 
-const features = [
+const screens = [
   {
-    icon: Clock,
-    title: 'Controlo de Assiduidade',
-    desc: 'Registe entradas e saídas com precisão. Suporte a biometria, cartão, PIN e app móvel.',
-    color: 'bg-blue-100 text-blue-600',
+    src: '/images/screens/screen-1.jpeg',
+    title: 'Gestão Financeira',
+    desc: 'Balanço líquido e sobra salarial por colaborador.',
+    yOffset: 64,
   },
   {
-    icon: Calendar,
-    title: 'Gestão de Férias',
-    desc: 'Pedidos, aprovações e saldos de férias totalmente automatizados e integrados.',
-    color: 'bg-purple-100 text-purple-600',
+    src: '/images/screens/screen-2.jpeg',
+    title: 'Controlo de Gastos',
+    desc: 'Monitorize gastos mensais com projeções automáticas.',
+    yOffset: 32,
   },
   {
-    icon: BarChart3,
-    title: 'Relatórios Avançados',
-    desc: 'Dashboards em tempo real com análises de produtividade, horas extra e absenteísmo.',
-    color: 'bg-green-100 text-green-600',
+    src: '/images/screens/screen-3.jpeg',
+    title: 'Escala & Calendário',
+    desc: 'Escalas semanais, tarefas e saldos de férias.',
+    yOffset: 0,
   },
   {
-    icon: Smartphone,
-    title: 'App Móvel',
-    desc: 'Gestão na palma da mão. iOS e Android com marcação de ponto por geolocalização.',
-    color: 'bg-orange-100 text-orange-600',
+    src: '/images/screens/screen-4.jpeg',
+    title: 'Férias & Atrasos',
+    desc: 'Solicite férias e acompanhe registos de atrasos.',
+    yOffset: 32,
   },
   {
-    icon: Shield,
-    title: 'Conformidade Legal',
-    desc: 'Cumprimento automático da legislação laboral angolana e RGPD para dados de colaboradores.',
-    color: 'bg-red-100 text-red-600',
-  },
-  {
-    icon: Bell,
-    title: 'Alertas Inteligentes',
-    desc: 'Notificações automáticas para atrasos, ausências não justificadas e horas extra.',
-    color: 'bg-yellow-100 text-yellow-600',
-  },
-  {
-    icon: FileText,
-    title: 'Processamento Salarial',
-    desc: 'Exportação direta para sistemas de payroll com cálculo automático de subsídios.',
-    color: 'bg-teal-100 text-teal-600',
-  },
-  {
-    icon: Globe,
-    title: 'Acesso Remoto',
-    desc: 'Gerencie equipas distribuídas com suporte a múltiplas localizações e turnos.',
-    color: 'bg-indigo-100 text-indigo-600',
-  },
-  {
-    icon: Zap,
-    title: 'Integrações',
-    desc: 'Conecte com ERP, sistemas de RH e ferramentas que já utiliza na sua empresa.',
-    color: 'bg-pink-100 text-pink-600',
+    src: '/images/screens/screen-5.jpeg',
+    title: 'Documentos',
+    desc: 'Recibos de vencimento e declarações sempre acessíveis.',
+    yOffset: 64,
   },
 ]
 
-function useInView(threshold = 0.1) {
+function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
 
@@ -79,14 +51,79 @@ function useInView(threshold = 0.1) {
   return { ref, inView }
 }
 
+function IphoneMockup({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="relative w-full select-none">
+      {/* Outer titanium frame */}
+      <div
+        className="relative shadow-[0_28px_56px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.08)]"
+        style={{
+          background: 'linear-gradient(145deg, #3a3a3c, #1c1c1e)',
+          borderRadius: '2.2rem',
+          padding: '3px',
+        }}
+      >
+        {/* Left: mute toggle */}
+        <div
+          className="absolute bg-gray-600"
+          style={{ left: '-4px', top: '14%', width: '4px', height: '22px', borderRadius: '2px 0 0 2px' }}
+        />
+        {/* Left: volume up */}
+        <div
+          className="absolute bg-gray-600"
+          style={{ left: '-4px', top: '22%', width: '4px', height: '34px', borderRadius: '2px 0 0 2px' }}
+        />
+        {/* Left: volume down */}
+        <div
+          className="absolute bg-gray-600"
+          style={{ left: '-4px', top: '32%', width: '4px', height: '34px', borderRadius: '2px 0 0 2px' }}
+        />
+        {/* Right: power/lock */}
+        <div
+          className="absolute bg-gray-600"
+          style={{ right: '-4px', top: '23%', width: '4px', height: '52px', borderRadius: '0 2px 2px 0' }}
+        />
+
+        {/* Screen bezel */}
+        <div
+          className="relative overflow-hidden bg-black"
+          style={{ borderRadius: '2rem', aspectRatio: '9 / 19.5' }}
+        >
+          {/* Dynamic Island */}
+          <div
+            className="absolute z-20 bg-black"
+            style={{
+              top: '2.8%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '34%',
+              height: '3.4%',
+              borderRadius: '999px',
+            }}
+          />
+
+          {/* Screenshot */}
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-full object-cover object-top"
+            draggable={false}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Features() {
   const { ref, inView } = useInView()
 
   return (
-    <section id="features" className="py-24 bg-white">
+    <section id="features" className="py-24 bg-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
           <span className="inline-block bg-blue-50 text-blue-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
             Funcionalidades
           </span>
@@ -100,26 +137,35 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Grid */}
-        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map(({ icon: Icon, title, desc, color }, i) => (
+        {/* Phones row */}
+        <div
+          ref={ref}
+          className="flex items-end justify-center gap-4 sm:gap-6 overflow-x-auto pb-10"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {screens.map(({ src, title, desc, yOffset }, i) => (
             <div
               key={title}
-              className="group p-6 rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              className="flex-shrink-0 flex flex-col items-center gap-5"
               style={{
+                width: 'clamp(140px, 17vw, 196px)',
+                transform: inView
+                  ? `translateY(${yOffset}px)`
+                  : `translateY(${yOffset + 48}px)`,
                 opacity: inView ? 1 : 0,
-                transform: inView ? 'none' : 'translateY(20px)',
-                transition: `opacity 0.5s ease ${i * 60}ms, transform 0.5s ease ${i * 60}ms, box-shadow 0.3s, border-color 0.3s, translate 0.3s`,
+                transition: `opacity 0.65s ease ${i * 90}ms, transform 0.65s cubic-bezier(.22,.68,0,1.2) ${i * 90}ms`,
               }}
             >
-              <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className="w-6 h-6" />
+              <IphoneMockup src={src} alt={title} />
+
+              <div className="text-center px-1">
+                <p className="text-sm font-bold text-gray-900 mb-1">{title}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
               </div>
-              <h3 className="text-base font-bold text-gray-900 mb-2">{title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   )

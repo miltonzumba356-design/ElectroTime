@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { ArrowLeft, Building2, CheckCircle2, Loader2, Mail, Phone, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Building2, CheckCircle2, Eye, EyeOff, Loader2, Mail, Phone, ShieldCheck } from 'lucide-react'
 
 type RegisterForm = {
   nome: string
@@ -8,10 +8,11 @@ type RegisterForm = {
   email: string
   telefone: string
   endereco: string
-  admin_nome: string
+  admin_username: string
   admin_email: string
-  admin_telefone: string
-  observacoes: string
+  admin_nome: string
+  admin_sobrenome: string
+  admin_senha: string
 }
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
@@ -22,10 +23,11 @@ const initialForm: RegisterForm = {
   email: '',
   telefone: '',
   endereco: '',
-  admin_nome: '',
+  admin_username: '',
   admin_email: '',
-  admin_telefone: '',
-  observacoes: '',
+  admin_nome: '',
+  admin_sobrenome: '',
+  admin_senha: '',
 }
 
 export default function CompanyRegistration() {
@@ -33,6 +35,7 @@ export default function CompanyRegistration() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const update = (key: keyof RegisterForm, value: string) => {
     setForm((current) => ({ ...current, [key]: value }))
@@ -51,13 +54,17 @@ export default function CompanyRegistration() {
       })
 
       if (!response.ok) {
-        throw new Error('Erro ao enviar solicitacao')
+        const data = await response.json().catch(() => null)
+        const msg = data
+          ? Object.values(data).flat().join(' ')
+          : `Erro ${response.status}`
+        throw new Error(msg)
       }
 
       setSubmitted(true)
       setForm(initialForm)
-    } catch {
-      setError('Nao foi possivel enviar a solicitacao. Verifique os dados e tente novamente.')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Nao foi possivel enviar a solicitacao.')
     } finally {
       setLoading(false)
     }
@@ -119,34 +126,87 @@ export default function CompanyRegistration() {
                 <p className="mt-1 text-sm text-slate-500">Preencha os campos obrigatorios para solicitar acesso.</p>
               </div>
 
+              {/* Dados da empresa */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Nome da empresa"><input required value={form.nome} onChange={(e) => update('nome', e.target.value)} className={inputClass} placeholder="Empresa, Lda" /></Field>
-                <Field label="NIF"><input required value={form.nif} onChange={(e) => update('nif', e.target.value)} className={inputClass} placeholder="Numero fiscal" /></Field>
+                <Field label="Nome da empresa *">
+                  <input required value={form.nome} onChange={(e) => update('nome', e.target.value)} className={inputClass} placeholder="Empresa, Lda" />
+                </Field>
+                <Field label="NIF *">
+                  <input required value={form.nif} onChange={(e) => update('nif', e.target.value)} className={inputClass} placeholder="Numero fiscal" />
+                </Field>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Email da empresa"><input required type="email" value={form.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="empresa@dominio.ao" /></Field>
-                <Field label="Telefone"><input required value={form.telefone} onChange={(e) => update('telefone', e.target.value)} className={inputClass} placeholder="+244 9XX XXX XXX" /></Field>
+                <Field label="Email da empresa *">
+                  <input required type="email" value={form.email} onChange={(e) => update('email', e.target.value)} className={inputClass} placeholder="empresa@dominio.ao" />
+                </Field>
+                <Field label="Telefone *">
+                  <input required value={form.telefone} onChange={(e) => update('telefone', e.target.value)} className={inputClass} placeholder="+244 9XX XXX XXX" />
+                </Field>
               </div>
 
-              <Field label="Endereco"><input required value={form.endereco} onChange={(e) => update('endereco', e.target.value)} className={inputClass} placeholder="Rua, municipio, provincia" /></Field>
+              <Field label="Endereco *">
+                <input required value={form.endereco} onChange={(e) => update('endereco', e.target.value)} className={inputClass} placeholder="Rua, municipio, provincia" />
+              </Field>
 
+              {/* Dados do administrador */}
               <div className="border-t border-slate-100 pt-5">
-                <h3 className="text-sm font-bold text-slate-950">Responsavel pelo acesso</h3>
+                <h3 className="text-sm font-bold text-slate-950">Conta do administrador</h3>
+                <p className="mt-0.5 text-xs text-slate-500">Sera o primeiro acesso apos aprovacao.</p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Nome do responsavel"><input required value={form.admin_nome} onChange={(e) => update('admin_nome', e.target.value)} className={inputClass} placeholder="Nome completo" /></Field>
-                <Field label="Email do responsavel"><input required type="email" value={form.admin_email} onChange={(e) => update('admin_email', e.target.value)} className={inputClass} placeholder="admin@empresa.ao" /></Field>
+                <Field label="Nome *">
+                  <input required value={form.admin_nome} onChange={(e) => update('admin_nome', e.target.value)} className={inputClass} placeholder="Primeiro nome" />
+                </Field>
+                <Field label="Sobrenome *">
+                  <input required value={form.admin_sobrenome} onChange={(e) => update('admin_sobrenome', e.target.value)} className={inputClass} placeholder="Ultimo nome" />
+                </Field>
               </div>
 
-              <Field label="Telefone do responsavel"><input value={form.admin_telefone} onChange={(e) => update('admin_telefone', e.target.value)} className={inputClass} placeholder="+244 9XX XXX XXX" /></Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Username *">
+                  <input required value={form.admin_username} onChange={(e) => update('admin_username', e.target.value)} className={inputClass} placeholder="nome.sobrenome" autoComplete="username" />
+                </Field>
+                <Field label="Email do administrador *">
+                  <input required type="email" value={form.admin_email} onChange={(e) => update('admin_email', e.target.value)} className={inputClass} placeholder="admin@empresa.ao" />
+                </Field>
+              </div>
 
-              <Field label="Observacoes"><textarea value={form.observacoes} onChange={(e) => update('observacoes', e.target.value)} rows={3} className={`${inputClass} h-auto resize-none py-3`} placeholder="Informacoes adicionais para analise" /></Field>
+              <Field label="Senha *">
+                <div className="relative">
+                  <input
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                    value={form.admin_senha}
+                    onChange={(e) => update('admin_senha', e.target.value)}
+                    className={`${inputClass} pr-10`}
+                    placeholder="Minimo 8 caracteres"
+                    autoComplete="new-password"
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </Field>
 
-              {error && <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+              {error && (
+                <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {error}
+                </p>
+              )}
 
-              <button type="submit" disabled={loading} className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-60">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+              >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Phone className="h-4 w-4" />}
                 Enviar solicitacao de registo
               </button>
